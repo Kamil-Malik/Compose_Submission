@@ -1,12 +1,8 @@
 package com.lelestacia.submissioncompose.ui.component
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
@@ -22,45 +18,50 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.lelestacia.submissioncompose.data.model.AnimeModel
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AnimeRow(
-    model: AnimeModel, onClicked: (AnimeModel) -> Unit, modifier: Modifier = Modifier
+    title: String,
+    episode: Int,
+    status: String,
+    score: Double,
+    coverUrl: String,
+    onClicked: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.background,
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         elevation = 5.dp,
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(16.dp),
+        onClick = { onClicked(title) }
     ) {
         Row {
-            AsyncImage(
-                model = model.cover_url,
+            AsyncImage(model = coverUrl,
                 contentDescription = "Cover Image",
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .width(100.dp)
-                    .clickable { onClicked(model) }
-                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
-            )
+                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)))
             Column(modifier = modifier.padding(8.dp)) {
-                Text(text = model.title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier.padding(top = 8.dp)
+                    modifier = modifier.padding(top = 4.dp)
                 ) {
-                    Text(text = "Rating\t\t\t\t:\t${model.score}")
+                    Text(text = "Rating\t\t\t\t:\t$score")
                     Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = "Icon Rating",
                         modifier = modifier
-                            .padding(horizontal = 8.dp)
+                            .padding(horizontal = 4.dp)
                             .size(16.dp)
                     )
                 }
-                Text(text = "Type\t\t\t\t\t\t:\t${model.type}")
-                Text(text = "Episodes\t\t:\t${model.episode}")
-                Text(text = "Status\t\t\t\t:\t${model.status}")
-                Text(text = "Premiered\t:\t${model.premiered}")
+                Text(text = "Episodes\t:\t$episode")
+                Text(text = "Status\t\t\t\t:\t$status")
             }
         }
     }
@@ -84,6 +85,11 @@ fun PreviewAnimeRow() {
             status = "Finished Airing",
             premiered = "Spring 2022"
         )
-        AnimeRow(model = example, onClicked = { })
+        AnimeRow(title = example.title,
+            episode = example.episode,
+            status = example.status,
+            score = example.score,
+            coverUrl = example.score.toString(),
+            onClicked = {})
     }
 }

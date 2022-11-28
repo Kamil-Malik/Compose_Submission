@@ -1,5 +1,9 @@
 package com.lelestacia.submissioncompose.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class AnimeModel(
 
     val title: String,
@@ -23,4 +27,4 @@ data class AnimeModel(
     val premiered: String,
 
     var isFavorite: Boolean = false
-)
+): Parcelable

@@ -1,11 +1,15 @@
 package com.lelestacia.submissioncompose.data.model
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
+@Entity(tableName = "anime_table")
 data class AnimeModel(
 
+    @PrimaryKey
     val title: String,
 
     val score: Double,
@@ -14,7 +18,7 @@ data class AnimeModel(
 
     val first_description: String,
 
-    val second_description: String?,
+    val second_description: String,
 
     val cover_url: String,
 

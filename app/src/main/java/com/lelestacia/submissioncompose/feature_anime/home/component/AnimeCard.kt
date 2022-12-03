@@ -1,24 +1,33 @@
-package com.lelestacia.submissioncompose.ui.component
+package com.lelestacia.submissioncompose.feature_anime.home.component
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.lelestacia.submissioncompose.R
 import com.lelestacia.submissioncompose.data.model.AnimeModel
+import com.lelestacia.submissioncompose.ui.theme.Brown2
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AnimeRow(
     title: String,
@@ -31,37 +40,57 @@ fun AnimeRow(
 ) {
     Card(
         backgroundColor = MaterialTheme.colors.background,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+        modifier = modifier.fillMaxWidth(),
         elevation = 5.dp,
         shape = RoundedCornerShape(16.dp),
-        onClick = { onClicked(title) }
     ) {
-        Row {
-            AsyncImage(model = coverUrl,
+        Row(modifier = modifier
+            .clickable { onClicked(title) }
+            .background(Brown2)) {
+            AsyncImage(
+                model = coverUrl,
                 contentDescription = "Cover Image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .width(100.dp)
-                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp)))
-            Column(modifier = modifier.padding(8.dp)) {
-                Text(text = title, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+            )
+            Column(modifier = modifier.padding(vertical = 8.dp, horizontal = 16.dp)) {
+                Text(
+                    text = title,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = modifier.padding(top = 4.dp)
                 ) {
-                    Text(text = "Rating\t\t\t\t:\t$score")
+                    Text(
+                        text = stringResource(id = R.string.rating, score),
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White
+                    )
                     Icon(
                         imageVector = Icons.Filled.Star,
                         contentDescription = "Icon Rating",
                         modifier = modifier
                             .padding(horizontal = 4.dp)
-                            .size(16.dp)
+                            .size(16.dp),
+                        tint = Color.White
                     )
                 }
-                Text(text = "Episodes\t:\t$episode")
-                Text(text = "Status\t\t\t\t:\t$status")
+                Text(
+                    text = stringResource(id = R.string.episode, episode.toString()),
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
+                )
+                Text(
+                    text = stringResource(id = R.string.status, status),
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White,
+                    style = MaterialTheme.typography.body1
+                )
             }
         }
     }
@@ -70,9 +99,7 @@ fun AnimeRow(
 @Preview(showBackground = true, device = Devices.PIXEL_3, showSystemUi = true)
 @Composable
 fun PreviewAnimeRow() {
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
+    Column {
         val example = AnimeModel(
             title = "Kawaii dake ja Nai Shikimori-san",
             score = 6.94,
@@ -85,11 +112,23 @@ fun PreviewAnimeRow() {
             status = "Finished Airing",
             premiered = "Spring 2022"
         )
-        AnimeRow(title = example.title,
-            episode = example.episode,
-            status = example.status,
-            score = example.score,
-            coverUrl = example.score.toString(),
-            onClicked = {})
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            for (i in 1..10) {
+                item {
+                    AnimeRow(title = example.title,
+                        episode = example.episode,
+                        status = example.status,
+                        score = example.score,
+                        coverUrl = example.score.toString(),
+                        onClicked = {})
+                }
+            }
+        }
+
     }
 }
